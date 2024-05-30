@@ -80,6 +80,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.onsdigital</groupId>
             <artifactId>dp-logging</artifactId>
             <version>${dp.logging.version}</version>
