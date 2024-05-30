@@ -1,0 +1,13 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: onsdigital/dp-concourse-tools-java
+
+inputs:
+  - name: dp-upload-service-client-java
+
+run:
+  path: dp-upload-service-client-java/ci/scripts/lint.sh
