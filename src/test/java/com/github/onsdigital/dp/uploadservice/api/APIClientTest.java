@@ -44,7 +44,7 @@ class APIClientTest {
     }
 
     @Test
-    void successfullyPublishingCollection() throws Exception {
+    void successfullyUploadingAFile() throws Exception {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(HttpStatus.SC_CREATED));
 
