@@ -1,20 +1,19 @@
 package com.github.onsdigital.dp.uploadservice.api;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
+import com.github.onsdigital.dp.uploadservice.api.exceptions.ConnectionException;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.HttpEntity;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.NameValuePair;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.net.URIBuilder;
 
-import com.github.onsdigital.dp.uploadservice.api.exceptions.ConnectionException;
+import java.io.File;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.util.List;
 
 public class APIClient implements Client  {
 

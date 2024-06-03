@@ -1,9 +1,9 @@
 package com.github.onsdigital.dp.uploadservice.api;
 
-import org.apache.http.NameValuePair;
-
 import java.io.File;
 import java.util.List;
+
+import org.apache.hc.core5.http.NameValuePair;
 
 public interface Client {
     /**
