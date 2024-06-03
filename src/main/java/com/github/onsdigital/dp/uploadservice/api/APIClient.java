@@ -31,7 +31,7 @@ public class APIClient implements Client  {
     public void uploadFile(File file, List<NameValuePair> params) {
         URIBuilder uriBuilder = null;
         try {
-            uriBuilder = new URIBuilder("http://dp-upload-service:25100/upload-new");
+            uriBuilder = new URIBuilder(hostname);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
