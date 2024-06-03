@@ -41,7 +41,7 @@ public class APIClient implements Client  {
         try {
             HttpPost request = new HttpPost(uriBuilder.build());
             final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.addBinaryBody("bob", file);
+            builder.addBinaryBody("file", file);
             builder.setBoundary("--TFJ5T8Nl2Py-S_BZXD5_FaEzCCuRXVXL0--[\\r][\\n]");
             final HttpEntity entityReq = builder.build();
             request.setEntity(entityReq);

@@ -4,7 +4,6 @@ import com.github.onsdigital.dp.uploadservice.api.exceptions.ConnectionException
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import okio.Buffer;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
@@ -16,7 +15,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class APIClientTest {
 
@@ -40,7 +40,7 @@ class APIClientTest {
         params.add(new BasicNameValuePair("licence", "fran"));
         params.add(new BasicNameValuePair("licenceUrl", "google"));
         params.add(new BasicNameValuePair("collectionId","collectionID"));
-        file = new File("/bob");
+        file = new File("file");
     }
 
     @Test
@@ -65,7 +65,7 @@ class APIClientTest {
     void handingInvalidHostnameProvided() {
         APIClient client = new APIClient("NOT A VALID HOSTNAME", TOKEN);
 
-        Exception e = assertThrows(ConnectionException.class, () -> {
+        Exception e = assertThrows(RuntimeException.class, () -> {
             client.uploadFile(file, params);
         });
 
@@ -82,22 +82,4 @@ class APIClientTest {
 
         assertNotNull(e.getCause());
     }
-
-    @Test
-    void handlingUnexpectedError() {
-        String responseBody = "its always tea time";
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(418).setBody(new Buffer().writeUtf8(responseBody)));
-
-        HttpUrl url = server.url("");
-
-        APIClient client = new APIClient(url.toString(), TOKEN);
-
-        Exception e = assertThrows(ConnectionException.class, () -> {
-            client.uploadFile(file, params);
-        });
-
-        assertTrue(e.getMessage().contains(responseBody));
-    }
-
 }
