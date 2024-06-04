@@ -81,4 +81,15 @@ class APIClientTest {
 
         assertNotNull(e.getCause());
     }
+
+    @Test
+    void handingIncorrectTokenProvided() {
+        APIClient client = new APIClient("http://localhost:123456789", TOKEN + "Gibberish");
+
+        Exception e = assertThrows(ConnectionException.class, () -> {
+            client.uploadFile(file, params);
+        });
+
+        assertNotNull(e.getCause());
+    }
 }
