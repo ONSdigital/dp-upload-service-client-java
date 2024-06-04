@@ -40,7 +40,7 @@ class APIClientTest {
         params.add(new BasicNameValuePair("licence", "fran"));
         params.add(new BasicNameValuePair("licenceUrl", "google"));
         params.add(new BasicNameValuePair("collectionId","collectionID"));
-        file = new File("file");
+        file = new File(getClass().getClassLoader().getResource("testFile.txt").getFile());
     }
 
     @Test
@@ -55,7 +55,6 @@ class APIClientTest {
         try {
             client.uploadFile(file, params);
         } catch (Exception e) {
-            System.out.println(e);
             Assertions.fail("No Exception should have been thrown");
         }
 
