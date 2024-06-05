@@ -13,4 +13,5 @@ public interface Client {
      * @param params
      */
     void uploadFile(File file, List<NameValuePair> params);
+    void uploadFile(File file, List<NameValuePair> params, boolean flag);
 }
