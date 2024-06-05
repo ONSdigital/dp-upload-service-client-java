@@ -66,6 +66,14 @@
     </repositories>
 
     <dependencies>
+
+        <!-- Keep logging at the beginning of the file so that org.slf4j dependency is imported at its latest version required by logging to work -->
+        <dependency>
+            <groupId>com.github.onsdigital</groupId>
+            <artifactId>dp-logging</artifactId>
+            <version>${dp.logging.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
@@ -84,14 +92,6 @@
             <groupId>org.apache.httpcomponents.core5</groupId>
             <artifactId>httpcore5</artifactId>
             <version>5.2.4</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.github.onsdigital</groupId>
-            <artifactId>dp-logging</artifactId>
-            <version>${dp.logging.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>

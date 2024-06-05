@@ -13,5 +13,12 @@ public interface Client {
      * @param params
      */
     void uploadFile(File file, List<NameValuePair> params);
-    void uploadFile(File file, List<NameValuePair> params, boolean flag);
+
+    /**
+     * Uploads the given file to the private s3 bucket.
+     *
+     * @param file
+     * @param params
+     */
+    void uploadResumableFile(File file, List<NameValuePair> params);
 }
