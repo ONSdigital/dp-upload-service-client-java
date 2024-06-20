@@ -4,11 +4,12 @@ import com.github.onsdigital.dp.uploadservice.api.exceptions.ConnectionException
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
 
@@ -79,7 +80,6 @@ public class APIClient implements Client  {
                 params.add(new BasicNameValuePair("resumableChunkNumber", String.valueOf(chunkNumber+1)));
                 params.add(new BasicNameValuePair("resumableChunkSize", String.valueOf(resumableChunkSize)));
 
-                info().data("chunkNumber", chunkNumber).log("Sending chunk #" + chunkNumber);
                 sendChunk(buffer, chunkNumber, totalChunks, file.getName(), params);
 
                 params.removeIf(nameValuePair -> nameValuePair.getName().equals("resumableChunkNumber"));
@@ -106,8 +106,10 @@ public class APIClient implements Client  {
 
             request.setEntity(builder.build());
 
-            try (CloseableHttpResponse response = httpClient.execute(request)) {
-                int responseCode = response.getCode();
+            HttpClientResponseHandler<String> responseHandler = classicHttpResponse -> {
+                int responseCode = classicHttpResponse.getCode();
+                HttpEntity entity = classicHttpResponse.getEntity();
+
                 if (responseCode == 200) {
                     info().log("Chunk " + chunkNumber + " uploaded successfully.");
                 } else if (responseCode == 201) {
@@ -115,7 +117,14 @@ public class APIClient implements Client  {
                 } else {
                     info().log("Failed to upload chunk #" + chunkNumber + ". Response code: " + responseCode);
                 }
-            }
+
+                if (entity != null) {
+                    return EntityUtils.toString(entity);
+                }
+                return null;
+            };
+
+            httpClient.execute(request, responseHandler);
         } catch (Exception e) {
             throw new ConnectionException("error talking to upload service", e);
         }
