@@ -92,4 +92,52 @@ class APIClientTest {
 
         assertNotNull(e.getCause());
     }
+
+    @Test
+    void successfullyUploadingResumableFile() throws Exception {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(HttpStatus.SC_CREATED));
+
+        HttpUrl url = server.url("");
+        APIClient client = new APIClient(url.toString(), TOKEN);
+
+        try {
+            client.uploadResumableFile(file, params);
+        } catch (Exception e) {
+            Assertions.fail("No Exception should have been thrown");
+        }
+    }
+
+    @Test
+    void handingInvalidHostnameProvidedResumableFile() {
+        APIClient client = new APIClient("NOT A VALID HOSTNAME", TOKEN);
+
+        Exception e = assertThrows(RuntimeException.class, () -> {
+            client.uploadResumableFile(file, params);
+        });
+
+        assertNotNull(e.getCause());
+    }
+
+    @Test
+    void handingIncorrectHostnameProvidedResumableFile() {
+        APIClient client = new APIClient("http://localhost:123456789", TOKEN);
+
+        Exception e = assertThrows(ConnectionException.class, () -> {
+            client.uploadResumableFile(file, params);
+        });
+
+        assertNotNull(e.getCause());
+    }
+
+    @Test
+    void handingIncorrectTokenProvidedResumableFile() {
+        APIClient client = new APIClient("http://localhost:123456789", TOKEN + "Gibberish");
+
+        Exception e = assertThrows(ConnectionException.class, () -> {
+            client.uploadResumableFile(file, params);
+        });
+
+        assertNotNull(e.getCause());
+    }
 }
