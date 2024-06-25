@@ -1,6 +1,7 @@
 package com.github.onsdigital.dp.uploadservice.api;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.hc.core5.http.NameValuePair;
@@ -12,5 +13,5 @@ public interface Client {
      * @param file
      * @param params
      */
-    void uploadResumableFile(File file, List<NameValuePair> params);
+    void uploadResumableFile(File file, List<NameValuePair> params) throws IOException;
 }

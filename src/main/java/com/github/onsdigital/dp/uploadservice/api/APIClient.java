@@ -37,7 +37,7 @@ public class APIClient implements Client  {
     }
 
     @Override
-    public void uploadResumableFile(File file, List<NameValuePair> params) {
+    public void uploadResumableFile(File file, List<NameValuePair> params) throws IOException {
         long fileSize = file.length();
         int totalChunks = (int) Math.ceil((double) fileSize / this.configuration.getChunkSize());
 
@@ -63,7 +63,7 @@ public class APIClient implements Client  {
                 params.removeIf(nameValuePair -> nameValuePair.getName().equals("resumableChunkSize"));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 
