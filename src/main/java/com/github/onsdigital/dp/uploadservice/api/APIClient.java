@@ -2,6 +2,7 @@ package com.github.onsdigital.dp.uploadservice.api;
 
 import com.github.onsdigital.dp.uploadservice.api.configuration.Configuration;
 import com.github.onsdigital.dp.uploadservice.api.exceptions.ConnectionException;
+import com.github.onsdigital.dp.uploadservice.api.exceptions.UploadChunkException;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -93,6 +94,7 @@ public class APIClient implements Client  {
                     info().log("Chunk " + chunkNumber + " uploaded successfully. All chunks are now uploaded (" + totalChunks + ").");
                 } else {
                     info().log("Failed to upload chunk #" + chunkNumber + ". Response code: " + responseCode);
+                    throw new UploadChunkException("error uploading chunk" + chunkNumber);
                 }
 
                 if (entity != null) {
