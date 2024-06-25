@@ -36,30 +36,6 @@ public class APIClient implements Client  {
     }
 
     @Override
-    public void uploadFile(File file, List<NameValuePair> params) {
-        URIBuilder uriBuilder;
-        try {
-            uriBuilder = new URIBuilder(hostname);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        uriBuilder.addParameters(params);
-
-        try {
-            HttpPost request = new HttpPost(uriBuilder.build());
-            final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.addBinaryBody("file", file);
-            builder.setBoundary("--TFJ5T8Nl2Py-S_BZXD5_FaEzCCuRXVXL0--[\\r][\\n]");
-            final HttpEntity entityReq = builder.build();
-            request.setEntity(entityReq);
-            request.addHeader("Authorization", "Bearer " + authToken);
-            httpClient.execute(request);
-        } catch (Exception e) {
-            throw new ConnectionException("error talking to upload service", e);
-        }
-    }
-
-    @Override
     public void uploadResumableFile(File file, List<NameValuePair> params) {
         long fileSize = file.length();
         int totalChunks = (int) Math.ceil((double) fileSize / this.configuration.getChunkSize());
@@ -105,6 +81,7 @@ public class APIClient implements Client  {
             builder.addBinaryBody("file", chunk, ContentType.APPLICATION_OCTET_STREAM, fileName);
 
             request.setEntity(builder.build());
+            request.addHeader("Authorization", "Bearer " + authToken);
 
             HttpClientResponseHandler<String> responseHandler = classicHttpResponse -> {
                 int responseCode = classicHttpResponse.getCode();
