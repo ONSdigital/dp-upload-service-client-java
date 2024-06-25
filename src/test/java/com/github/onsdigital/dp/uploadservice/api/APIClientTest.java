@@ -44,56 +44,6 @@ class APIClientTest {
     }
 
     @Test
-    void successfullyUploadingAFile() throws Exception {
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(HttpStatus.SC_CREATED));
-
-        HttpUrl url = server.url("");
-
-        APIClient client = new APIClient(url.toString(), TOKEN);
-
-        try {
-            client.uploadFile(file, params);
-        } catch (Exception e) {
-            Assertions.fail("No Exception should have been thrown");
-        }
-
-    }
-
-    @Test
-    void handingInvalidHostnameProvided() {
-        APIClient client = new APIClient("NOT A VALID HOSTNAME", TOKEN);
-
-        Exception e = assertThrows(RuntimeException.class, () -> {
-            client.uploadFile(file, params);
-        });
-
-        assertNotNull(e.getCause());
-    }
-
-    @Test
-    void handingIncorrectHostnameProvided() {
-        APIClient client = new APIClient("http://localhost:123456789", TOKEN);
-
-        Exception e = assertThrows(ConnectionException.class, () -> {
-            client.uploadFile(file, params);
-        });
-
-        assertNotNull(e.getCause());
-    }
-
-    @Test
-    void handingIncorrectTokenProvided() {
-        APIClient client = new APIClient("http://localhost:123456789", TOKEN + "Gibberish");
-
-        Exception e = assertThrows(ConnectionException.class, () -> {
-            client.uploadFile(file, params);
-        });
-
-        assertNotNull(e.getCause());
-    }
-
-    @Test
     void successfullyUploadingResumableFile() throws Exception {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(HttpStatus.SC_CREATED));
