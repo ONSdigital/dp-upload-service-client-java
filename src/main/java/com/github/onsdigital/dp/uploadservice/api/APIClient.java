@@ -1,5 +1,6 @@
 package com.github.onsdigital.dp.uploadservice.api;
 
+import com.github.onsdigital.dp.uploadservice.api.configuration.Configuration;
 import com.github.onsdigital.dp.uploadservice.api.exceptions.ConnectionException;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
@@ -22,17 +23,16 @@ import java.util.List;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
 public class APIClient implements Client  {
-
-    private static final int CHUNK_SIZE = 1024 * 1024 * 5; // 5MB chunks
-
     private String hostname;
     private String authToken;
     private CloseableHttpClient httpClient;
+    private Configuration configuration;
 
     public APIClient(String hostname, String authToken) {
         this.hostname = hostname;
         this.authToken = authToken;
-        httpClient = HttpClients.createDefault();
+        this.httpClient = HttpClients.createDefault();
+        this.configuration = new Configuration();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class APIClient implements Client  {
     @Override
     public void uploadResumableFile(File file, List<NameValuePair> params) {
         long fileSize = file.length();
-        int totalChunks = (int) Math.ceil((double) fileSize / CHUNK_SIZE);
+        int totalChunks = (int) Math.ceil((double) fileSize / this.configuration.getChunkSize());
 
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
 
@@ -70,8 +70,8 @@ public class APIClient implements Client  {
             params.add(new BasicNameValuePair("resumableTotalChunks", String.valueOf(totalChunks)));
 
             for (int chunkNumber = 0; chunkNumber < totalChunks; chunkNumber++) {
-                int start = chunkNumber * CHUNK_SIZE;
-                int resumableChunkSize = Math.min(CHUNK_SIZE, (int) (fileSize - start));
+                int start = chunkNumber * this.configuration.getChunkSize();
+                int resumableChunkSize = Math.min(this.configuration.getChunkSize(), (int) (fileSize - start));
                 byte[] buffer = new byte[resumableChunkSize];
 
                 int bytesRead = fileInputStream.read(buffer, 0, resumableChunkSize);
