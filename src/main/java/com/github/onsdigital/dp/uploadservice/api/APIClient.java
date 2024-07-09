@@ -70,7 +70,8 @@ public class APIClient implements Client  {
     private void sendChunk(byte[] chunk, int chunkNumber, int totalChunks, String fileName, List<NameValuePair> params) throws IOException {
         URIBuilder uriBuilder;
         try {
-            uriBuilder = new URIBuilder(hostname);
+            String endPoint = removeTrailingSlash(hostname) + "/upload-new";
+            uriBuilder = new URIBuilder(endPoint);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -107,5 +108,12 @@ public class APIClient implements Client  {
         } catch (Exception e) {
             throw new ConnectionException("error talking to upload service", e);
         }
+    }
+
+    private String removeTrailingSlash(String url){
+        if (url.endsWith("/")) {
+            return url.substring(0, url.length() - 1);
+        }
+        return url; // Return unchanged string if the string does not end with a slash
     }
 }
