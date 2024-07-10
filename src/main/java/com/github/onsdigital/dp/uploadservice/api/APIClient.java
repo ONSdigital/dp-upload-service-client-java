@@ -110,7 +110,7 @@ public class APIClient implements Client  {
         }
     }
 
-    private String removeTrailingSlash(String url){
+    protected String removeTrailingSlash(String url){
         if (url.endsWith("/")) {
             return url.substring(0, url.length() - 1);
         }

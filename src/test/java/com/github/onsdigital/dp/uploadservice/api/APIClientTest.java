@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -89,5 +90,15 @@ class APIClientTest {
         });
 
         assertNotNull(e.getCause());
+    }
+
+    @Test
+    void testRemoveTrailingSlash() {
+        String url = "http://www.ons.gov.uk//";
+        String expected = "http://www.ons.gov.uk/";
+        APIClient client = new APIClient("http://localhost:123456789", TOKEN);
+        String result = client.removeTrailingSlash(url);
+        assertNotNull(result);
+        assertEquals(expected, result);
     }
 }
